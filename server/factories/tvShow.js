@@ -6,6 +6,7 @@ var api = require('../helpers/api');
 var utils = require('../helpers/utils');
 var tvShowModel = require('../models/tvShow');
 var Q = require('q');
+var errors = require('../helpers/errors');
 
 module.exports = factory = {};
 
@@ -19,25 +20,49 @@ var insert = function (data) {
             var document = new tvShowModel(raw);
             document.save(function (err) {
                 if (err) deferred.insert.reject(err);
-                deferred.insert.resolve("Document inserted successfully");
+                deferred.insert.resolve(raw);
             });
-        } else {
-            deferred.insert.reject("Document already in collection");
+        }
+        else {
+            deferred.insert.reject(errors.wrong);
         }
     });
     return deferred.insert.promise;
 
 };
 
-factory.insert = function (url) {
-    return api.attempt(url)
-        .then(function (response) {
-            return insert(response)
-                .then(function (message) {
-                    return Q.resolve(message);
-                })
-                .catch(function (error) {
-                    return Q.reject(error);
-                });
+factory.insert = function (id) {
+    return api.getTvShowByID(id)
+        .then(insert)
+        .then(function (result) {
+            return Q.resolve(result);
+        })
+        .catch(function (error) {
+            return Q.reject(error);
         });
+};
+factory.getByID = function (id) {
+    deferred.getByID = Q.defer();
+    tvShowModel.findOne({id: id}, function (err, tvShow) {
+        if (!err) {
+            if (!tvShow) {
+                factory.insert(id)
+                    .then(function (response) {
+                        deferred.getByID.resolve(utils.sort(response));
+                    })
+                    .catch(function (error) {
+                        deferred.getByID.reject(error);
+                    });
+            }
+            else {
+                deferred.getByID.resolve(tvShow);
+            }
+        } else {
+            // TODO: Throw a motherfucking-something-went-wrong-error!
+        }
+    });
+    return deferred.getByID.promise;
+};
+factory.search = function (params) {
+
 };
