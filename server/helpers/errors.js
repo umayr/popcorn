@@ -9,7 +9,11 @@ errors.invalid = {
     msg: "you mad, bro?"
 }
 errors.wrong = {
-    err : "something went wrong",
-    msg : "someone is on drugs. >.>"
+    err: "something went wrong",
+    msg: "someone is on drugs. >.>"
+}
+errors.notfound = {
+    err: "not found",
+    msg: "the thingy you want is non-existent, brah!"
 }
 module.exports = errors;

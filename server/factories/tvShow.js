@@ -63,6 +63,20 @@ factory.getByID = function (id) {
     });
     return deferred.getByID.promise;
 };
-factory.search = function (params) {
+factory.search = function (name) {
+    deferred.search = Q.defer();
+    tvShowModel.find({_name: new RegExp(name, 'i')}, function (err, result) {
+        if (!err) {
+            if (!result) {
+                deferred.search.resolve(errors.notfound);
+            }
+            else {
+                deferred.search.resolve(result);
+            }
+        } else {
+            // TODO: Throw a motherfucking-something-went-wrong-error!
+        }
+    });
+    return deferred.search.promise;
 
 };

@@ -22,13 +22,13 @@ router.get('/get/:id', function (req, res) {
 });
 
 router.get('/search/', function (req, res) {
-    var raw = req.param("name");
-    var decoded = decodeURIComponent(raw);
-
-    res.json({
-        raw: raw,
-        decoded: decoded
+    var name = req.param("name");
+    tvShowFactory.search(name).then(function (result) {
+        res.json(result);
+    }).catch(function (error) {
+        res.json(error);
     });
+
 });
 
 module.exports = router;
