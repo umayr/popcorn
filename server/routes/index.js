@@ -2,30 +2,27 @@ var express = require('express');
 var router = express.Router();
 var tvShowFactory = require('../factories/tvShow');
 var utils = require('../helpers/utils');
+var Q = require('q');
 
 router.get('/', function (req, res) {
 
     var results = [];
-    for (var i = 1; i < 500; i++) {
+    var promises = [];
+    for (var i = 501; i < 1000; i++) {
         var url = utils.url.withID('tv/%s', i);
-        tvShowFactory.insert(url).then(function (result) {
+        var promise = tvShowFactory.insert(url).then(function (result) {
             results.push(result);
         }).catch(function (error) {
             results.push(error);
         });
+
+        promises.push(promise);
     }
-    res.json(results);
-
-});
-
-router.get('/tv/:id', function (req, res) {
-
-    var url = utils.url.withID('tv/%s', req.params.id);
-    tvShowFactory.insert(url).then(function (result) {
-        res.json(result);
-    }).catch(function (error) {
-        res.json(error);
+    Q.all(promises).then(function () {
+        res.json(results);
     });
+
+
 });
 
 module.exports = router;
