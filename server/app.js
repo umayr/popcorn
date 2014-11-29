@@ -4,7 +4,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 
-var routes = require('./routes/index');
+var rootRoutes = require('./routes/index');
+var tvRoutes = require('./routes/tv');
 var db = require('./helpers/db');
 
 var app = express();
@@ -14,7 +15,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 
-app.use('/', routes);
+app.use('/', rootRoutes);
+app.use('/tv', tvRoutes);
 
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
