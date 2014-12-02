@@ -4,7 +4,7 @@
 
 var api = require('../helpers/api');
 var utils = require('../helpers/utils');
-var tvShowModel = require('../models/tvShow');
+var tvShowModel = require('../data/collections/tvShow');
 var Q = require('q');
 var errors = require('../helpers/errors');
 

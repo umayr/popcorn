@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 
 var rootRoutes = require('./routes/index');
 var tvRoutes = require('./routes/tv');
-var db = require('./helpers/db');
+var db = require('./data/db');
 
 var app = express();
 
